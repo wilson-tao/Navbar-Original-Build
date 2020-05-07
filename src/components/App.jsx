@@ -6,18 +6,31 @@ export default class App extends Component {
     super(props);
     this.state = {
       searchQuery : '',
-      searchReturn: []
+      products: []
     };
 
       // bind functions
+      this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
-  // api get request with search query as body
-    // returning array?
-  
+  // api get request for entire list
+    // return array
+  getAllProducts() {
+    axios.get('/api/products')
+    .then(res => {
+      // look at whole response
+      // console.log(res);
+      // look at data key pair inside response obj
+      // console.log(res.data);
+      this.setState({ products: res.data })
+    })
+    .catch(err => {
+      console.log(error, 'client get request error')
+    })
+  }
   
   componentDidMount() {
-
+    this.getAllProducts();
   }
 
   
@@ -25,25 +38,21 @@ export default class App extends Component {
     this.setState({ searchQuery: event.target.value })
   }
 
-  onSubmitHandler(event) {
+  // onSubmitHandler(event) {
     
-  }
+  // }
 
 
 
   render() {
     return (
       <div>
-        <form onSubmit={onSubmitHandler}>
-          <input onChange={onChangeHandler}>
-          Search Worst Buy
-          </input>
-          <button>
-            Search
-          </button>
+        <form>
+          <input type='text' value={this.state.value} onChange={this.onChangeHandler}></input>
+          <button>Search</button>
         </form>
       </div>
-    );
+    )
   }
 }
 
