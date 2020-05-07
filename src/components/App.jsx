@@ -6,11 +6,14 @@ export default class App extends Component {
     super(props);
     this.state = {
       searchQuery : '',
-      products: []
+      products: [],
+      displayItem : {}
     };
 
       // bind functions
       this.onChangeHandler = this.onChangeHandler.bind(this);
+      this.onSubmitHandler = this.onSubmitHandler.bind(this);
+
   }
 
   // api get request for entire list
@@ -18,10 +21,6 @@ export default class App extends Component {
   getAllProducts() {
     axios.get('/api/products')
     .then(res => {
-      // look at whole response
-      // console.log(res);
-      // look at data key pair inside response obj
-      // console.log(res.data);
       this.setState({ products: res.data })
     })
     .catch(err => {
@@ -38,16 +37,25 @@ export default class App extends Component {
     this.setState({ searchQuery: event.target.value })
   }
 
-  // onSubmitHandler(event) {
-    
-  // }
+  onSubmitHandler(event) {
+    // search functionality (use other js shorthand filters?)
+    // sets state.displayItem to searched item, not yet rendered
+      // also considering converting displayitem into array instead to display multiple relevant searches?
+    for (var i = 0; i < this.state.products.length; i++) {
+      // can check for both SKU and product name
+      if (this.state.products[i].SKU === parseInt(this.state.searchQuery) || this.state.products[i].Product_Name === this.state.searchQuery) {
+        this.setState({ displayItem: this.state.products[i]})
+      }
+    }
+    event.preventDefault();
+  }
 
 
 
   render() {
     return (
       <div>
-        <form>
+        <form onSubmit={this.onSubmitHandler}>
           <input type='text' value={this.state.value} onChange={this.onChangeHandler}></input>
           <button>Search</button>
         </form>
